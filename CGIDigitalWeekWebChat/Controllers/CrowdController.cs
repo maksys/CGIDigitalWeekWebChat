@@ -13,12 +13,22 @@ namespace CGIDigitalWeekWebChat.Controllers
         [Route("Crowd/GetPersons/{standId}")]
         public IHttpActionResult GetStandPersons(string standId)
         {
-            var persons = CrowdModels.GetPersons(standId);
-            if (!persons.HasValue)
+            var headers = Request.Headers;
+            if(headers.Contains("Auth") && headers.GetValues("Auth").First() == "CGIDigitalWeek")
             {
-                return NotFound();
+                var persons = CrowdModels.GetPersons(standId);
+                if (!persons.HasValue)
+                {
+                    return NotFound();
+                }
+                return Ok(persons.Value);
+
             }
-            return Ok(persons.Value);
+            else
+            {
+                return Unauthorized();
+            }
+
         }
 
 
