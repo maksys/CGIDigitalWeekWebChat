@@ -48,7 +48,9 @@ namespace CGIDigitalWeekWebChat.Models
             var standsInfo = results
                 .DistinctBy(x => x.Properties["deviceId"].StringValue)
                 .Select(x => new StandInfo(x.Properties["deviceId"].StringValue, x.Properties["persons"].Int32Value.Value, x.Timestamp.DateTime))
+                .OrderBy(x => x.DeviceId)
                 .ToList();
+
             return standsInfo;
         }
     }
