@@ -1,36 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CGIDigitalWeekWebChat.Models;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using CGIDigitalWeekWebChat.Models;
 
 namespace CGIDigitalWeekWebChat.Controllers
 {
     public class CrowdController : ApiController
     {
-        [Route("Crowd/GetPersons/{standId}")]
-        public IHttpActionResult GetStandPersons(string standId)
+        [Route("Crowd/StandsInfo/{standId}")]
+        public IHttpActionResult GetStandsInfo(string standId)
         {
             var headers = Request.Headers;
-            if(headers.Contains("Auth") && headers.GetValues("Auth").First() == "CGIDigitalWeek")
+            if (headers.Contains("Auth") && headers.GetValues("Auth").First() == "CGIDigitalWeek")
             {
-                var persons = CrowdModels.GetPersons(standId);
-                if (!persons.HasValue)
+                var personCount = CrowdModels.GetStandsOccupation(standId);
+                if (!personCount.HasValue)
                 {
                     return NotFound();
                 }
-                return Ok(persons.Value);
-
+                return Ok(personCount.Value);
             }
             else
             {
                 return Unauthorized();
             }
-
         }
 
-
+        [Route("Crowd/StandsInfo")]
+        public IHttpActionResult GetStandsInfo()
+        {
+            var headers = Request.Headers;
+            if (headers.Contains("Auth") && headers.GetValues("Auth").First() == "CGIDigitalWeek")
+            {
+                var standsInfo = CrowdModels.GetStandsInfo();
+                return Json(standsInfo);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
     }
 }
