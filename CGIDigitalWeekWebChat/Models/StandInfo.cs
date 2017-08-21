@@ -13,6 +13,9 @@ namespace CGIDigitalWeekWebChat.Models
         [JsonProperty("persons")]
         public int Persons { get; set; }
 
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
         [JsonIgnore()]
         public DateTime Timestamp { get; set; }
 
@@ -20,10 +23,11 @@ namespace CGIDigitalWeekWebChat.Models
 
         #region Constructors
 
-        public StandInfo(string deviceId, int persons, DateTime timestamp)
+        public StandInfo(string deviceId, int persons, string message, DateTime timestamp)
         {
             DeviceId = deviceId;
             Persons = persons;
+            Message = message;
             Timestamp = timestamp;
         }
 

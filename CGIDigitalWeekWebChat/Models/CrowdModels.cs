@@ -36,7 +36,7 @@ namespace CGIDigitalWeekWebChat.Models
 
             CloudTable iotTable = tableClient.GetTableReference("deviceData");
             TableQuery query = new TableQuery();
-            query.SelectColumns = new List<string>() { "deviceId", "persons" };
+            query.SelectColumns = new List<string>() { "deviceId", "persons", "message" };
 
             //On limite aux events du jour
             var startDate = DateTimeOffset.Now.Date;
@@ -47,7 +47,7 @@ namespace CGIDigitalWeekWebChat.Models
             var results = iotTable.ExecuteQuery(query).OrderByDescending(x => x.Timestamp);
             var standsInfo = results
                 .DistinctBy(x => x.Properties["deviceId"].StringValue)
-                .Select(x => new StandInfo(x.Properties["deviceId"].StringValue, x.Properties["persons"].Int32Value.Value, x.Timestamp.DateTime))
+                .Select(x => new StandInfo(x.Properties["deviceId"].StringValue, x.Properties["persons"].Int32Value.Value, x.Properties["message"].StringValue, x.Timestamp.DateTime))
                 .OrderBy(x => x.DeviceId)
                 .ToList();
 
